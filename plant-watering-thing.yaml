@@ -1,0 +1,46 @@
+# ^ above this line is typically esphome bootstrap info such as name, wifi setup, ota
+# Purpose: Providing a sensor for soil moisture and a button to power a relay for a water pump
+# Sensor configs
+sensor:
+  - platform: adc
+    pin: GPIO35
+    name: "Soil Moisture"
+    id: soilsensor
+    update_interval: never
+    attenuation: 11db
+    unit_of_measurement: "%"
+    filters:
+    - median:
+        window_size: 7
+        send_every: 4
+        send_first_at: 1
+    - calibrate_linear:
+        - 1.952 -> 100.00
+        - 0.142 -> 0.00
+    - lambda: if (x < 1) return 0; else return (x);
+    accuracy_decimals: 0
+    
+   
+output:
+  - platform: gpio
+    pin: GPIO32
+    id: soil_power
+  - platform: gpio
+    pin: GPIO33
+    id: pump_power
+
+
+interval:
+  - interval: 3600s
+    then:
+      - output.turn_on: soil_power
+      - delay: 500ms
+      - component.update: soilsensor
+      - delay: 200ms
+      - output.turn_off: soil_power
+      
+button:
+  - platform: output
+    name: "Start pump"
+    output: pump_power
+    duration: 1500ms
