@@ -1,6 +1,6 @@
 # esphome configs
 
-Collection of esphome configs for various use-cases. These are calibriated for my devices/senors and probably need some tweaking if you copy/paste.
+Collection of [esphome](https://esphome.io/) configs for various use-cases. These are calibriated for my devices/senors and probably need some tweaking if you copy/paste.
 
 ## Install over usb
 
